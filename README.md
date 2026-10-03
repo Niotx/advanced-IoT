@@ -15,6 +15,8 @@ advanced-IoT/
 │   └── [wiring image]
 └── RaspberryPi_SSH_SETUP/
     └── README.md
+└── RaspberryPi_MQTT_BROKER/
+    └── README.md
 ```
 
 > تصویر سیم‌کشی، در صورت وجود، در پوشه مثال اول نگهداری می‌شود. نام فایل تصویر باید مطابق فایل واقعی ریپازیتوری باشد.
@@ -80,6 +82,20 @@ hostname -I
 **راهنمای کامل، دستورات، آزمون‌ها و رفع خطا:** [RaspberryPi_SSH_SETUP](./RaspberryPi_SSH_SETUP/README.md)
 
 **خروجی مورد انتظار:** اتصال قابل تکرار از مک به Raspberry Pi در شبکه محلی، ترجیحاً با SSH Key.
+
+## ۴. راه‌اندازی MQTT Broker روی Raspberry Pi
+
+**مسئله:** برای دریافت داده‌های ESP32 به یک Broker محلی نیاز داریم.
+
+1. بسته‌های `mosquitto` و `mosquitto-clients` را نصب کنید و وضعیت سرویس را بررسی کنید.
+2. با `mosquitto_sub` و `mosquitto_pub` تبادل پیام را روی خود Raspberry Pi آزمایش کنید.
+3. یک کاربر MQTT ایجاد کنید و Listener شبکه محلی را با `allow_anonymous false` تنظیم کنید.
+4. دسترسی TCP/1883 را در UFW **فقط برای شبکه مورداعتماد** مجاز کنید.
+5. تبادل پیام از دستگاه دیگری در شبکه را با حساب مجاز تست کنید.
+
+**تمام دستورها، خروجی مورد انتظار و رفع خطاها:** [RaspberryPi_MQTT_BROKER](./RaspberryPi_MQTT_BROKER/README.md)
+
+**خروجی مورد انتظار:** Mosquitto روی Raspberry Pi فعال است و کلاینت‌های مجاز شبکه محلی می‌توانند پیام MQTT ارسال و دریافت کنند. اتصال ESP32 را در مثال بعدی پیاده‌سازی می‌کنیم.
 
 ## روال استفاده از مثال‌ها
 
