@@ -1,0 +1,8 @@
+# Actual local credentials must never be committed.
+secrets.h
+
+# Arduino IDE / local temporary files
+*.bin
+*.elf
+*.map
+.DS_Store
