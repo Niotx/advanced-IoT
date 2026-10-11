@@ -1,2 +1,4 @@
 ~$advanced-IOT.pptx
 .DS_Store
+ESP32_MQTT_RELIABILITY/.gitignore
+pics/

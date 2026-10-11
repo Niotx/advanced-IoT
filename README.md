@@ -22,8 +22,13 @@ advanced-IoT/
 │   ├── secrets.h.example
 │   ├── .gitignore
 │   └── README.md
-└── RaspberryPi_MQTT_SUBSCRIBER/
-    ├── subscriber.py
+├── RaspberryPi_MQTT_SUBSCRIBER/
+│   ├── subscriber.py
+│   └── README.md
+└── ESP32_MQTT_RELIABILITY/
+    ├── ESP32_MQTT_RELIABILITY.ino
+    ├── secrets.h.example
+    ├── .gitignore
     └── README.md
 ```
 
@@ -132,6 +137,21 @@ hostname -I
 **کد، دستورات قابل کپی، خروجی نمونه و رفع خطا:** [RaspberryPi_MQTT_SUBSCRIBER](./RaspberryPi_MQTT_SUBSCRIBER/README.md)
 
 **خروجی مورد انتظار:** پیام JSON به مقادیر دما، رطوبت، شناسه دستگاه و `uptime_ms` تبدیل می‌شود. این مرحله **ذخیره‌سازی، داشبورد یا Timestamp واقعی** اضافه نمی‌کند؛ آن‌ها در مراحل بعد بررسی می‌شوند.
+
+## ۷. پایداری سیستم هنگام قطع ارتباط (Reliability & Data Management)
+
+**مسئله:** وقتی Wi-Fi یا MQTT Broker در دسترس نیست، اندازه‌گیری محلی باید ادامه پیدا کند و برای داده‌های ارسال‌نشده سیاست مشخصی داشته باشیم.
+
+1. ابتدا نسخه ساده [ESP32_MQTT_PUBLISH](./ESP32_MQTT_PUBLISH/README.md) را اجرا و ارسال پیام را تأیید کنید.
+2. در [ESP32_MQTT_RELIABILITY](./ESP32_MQTT_RELIABILITY/README.md) تنظیمات اتصال را در یک فایل محلی `secrets.h` بسازید و Sketch مستقل آن را Upload کنید.
+3. با قطع موقت Mosquitto، ادامه کار DHT22 و OLED، تلاش اتصال مجدد و افزایش صف RAM را بررسی کنید.
+4. در صورت آماده بودن LittleFS، ذخیره دوره‌ای Snapshot و بازیابی صف پس از Reset را آزمایش کنید.
+5. Broker را دوباره فعال و ارسال مجدد داده‌های صف را مشاهده کنید. تفاوت `uptime_ms` با `measured_at_unix` و نقش NTP را توضیح دهید.
+6. Logهای `[INFO]`، `[WARN]` و `[ERROR]` را بررسی کنید. درباره تفاوت JSON با MessagePack و Protobuf، انتخاب LittleFS در مقایسه با SPIFFS/NVS و محدودیت‌های بافر/Flash به‌صورت مفهومی بحث کنید.
+
+**کد، راه‌اندازی، آزمایش‌ها و رفع خطا:** [ESP32_MQTT_RELIABILITY](./ESP32_MQTT_RELIABILITY/README.md)
+
+**نتیجه مورد انتظار:** محصول هنگام قطع Broker پایش محلی را ادامه می‌دهد و در حد ظرفیت صف برای ارسال مجدد تلاش می‌کند. **این مثال تحویل تضمین‌شده یا ثبت دائمی همه داده‌ها نیست**؛ تله‌متری هنوز با QoS 0 و بدون TLS منتشر می‌شود. Remote Logging و FreeRTOS هم هنوز پیاده‌سازی نشده‌اند.
 
 ## روال استفاده از مثال‌ها
 
