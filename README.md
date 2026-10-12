@@ -16,7 +16,8 @@ advanced-IoT/
 ├── RaspberryPi_SSH_SETUP/
 │   └── README.md
 ├── RaspberryPi_MQTT_BROKER/
-│   └── README.md
+│   ├── README.md
+│   └── TLS_SETUP.md
 ├── ESP32_MQTT_PUBLISH/
 │   ├── ESP32_MQTT_PUBLISH.ino
 │   ├── secrets.h.example
@@ -30,8 +31,13 @@ advanced-IoT/
 │   ├── secrets.h.example
 │   ├── .gitignore
 │   └── README.md
-└── ESP32_FreeRTOS_SENSOR_TASKS/
-    ├── ESP32_FreeRTOS_SENSOR_TASKS.ino
+├── ESP32_FreeRTOS_SENSOR_TASKS/
+│   ├── ESP32_FreeRTOS_SENSOR_TASKS.ino
+│   └── README.md
+└── ESP32_MQTT_TLS/
+    ├── ESP32_MQTT_TLS.ino
+    ├── secrets.h.example
+    ├── .gitignore
     └── README.md
 ```
 
@@ -169,6 +175,23 @@ hostname -I
 **کد کامل، کتابخانه‌ها، اتصالات، آزمایش‌ها و رفع خطا:** [ESP32_FreeRTOS_SENSOR_TASKS](./ESP32_FreeRTOS_SENSOR_TASKS/README.md)
 
 **نتیجه مورد انتظار:** دو Task جدا برای سنسور و نمایشگر با یک Queue محدود و Mutex برای Logها کار می‌کنند. این مثال **MQTT یا Reliability قبلی را بازنویسی نمی‌کند** و برای یادگیری Task / Queue / Synchronization مستقل است؛ تست سخت‌افزاری نهایی لازم است.
+
+## ۹. امنیت IoT — MQTT over TLS & Access Control (Slides 35–38)
+
+**مسئله:** تا اینجا ESP32 با MQTT معمولی روی پورت ۱۸۸۳ پیام می‌فرستاد. حالا لازم است **Broker به‌صورت معتبر شناسایی شود، مسیر MQTT رمزنگاری شود و هر کاربر تنها به Topicهای مجاز دسترسی داشته باشد**.
+
+1. ابتدا تهدیدهای شنود، ورود غیرمجاز، پیام جعلی و افشای اطلاعات اتصال را بررسی کنید.
+2. با [TLS_SETUP روی Raspberry Pi](./RaspberryPi_MQTT_BROKER/TLS_SETUP.md)، CA آزمایشگاهی و گواهی اختصاصی Broker با SAN منطبق با IP/DNS بسازید؛ **کلیدهای خصوصی را وارد GitHub نکنید**.
+3. در Mosquitto دو کاربر مستقل و یک ACL با دسترسی محدود به Topicهای `iot/room-01/telemetry` و `iot/room-01/status` ایجاد کنید.
+4. Listener امن TCP/8883 را **قبل از محدودکردن ۱۸۸۳** راه‌اندازی کنید و اعتبار CA، اتصال و ACL را با ابزارهای خط فرمان آزمایش کنید.
+5. نمونه مستقل [ESP32_MQTT_TLS](./ESP32_MQTT_TLS/README.md) را اجرا کنید؛ از `secrets.h.example` یک `secrets.h` محلی بسازید و **گواهی عمومی CA** را در آن قرار دهید.
+6. پس از تأیید اتصال امن، دسترسی شبکه‌ایِ ۱۸۸۳ را به localhost محدود کنید و Firewall را با حفظ دسترسی SSH بازبینی کنید.
+
+**راهنمای Broker و تولید گواهی:** [RaspberryPi_MQTT_BROKER/TLS_SETUP.md](./RaspberryPi_MQTT_BROKER/TLS_SETUP.md)
+
+**کد و راهنمای ESP32:** [ESP32_MQTT_TLS](./ESP32_MQTT_TLS/README.md)
+
+**خروجی مورد انتظار:** ارتباط MQTT با TLS و اعتبارسنجی گواهی Broker برقرار می‌شود و حساب ESP32 فقط مجوز Publish روی Topicهای خود را دارد. **این نمونه Mutual TLS، ذخیره‌سازی آفلاین یا QoS تحویل تضمین‌شده ارائه نمی‌کند.** فایل‌های Credential واقعی و Private Keyها هیچ‌وقت بخشی از GitHub نیستند. اتصال روی سخت‌افزار واقعی نیازمند آزمون نهایی است.
 
 ## روال استفاده از مثال‌ها
 

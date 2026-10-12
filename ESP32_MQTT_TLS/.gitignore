@@ -1,0 +1,8 @@
+# Per-device local settings (may include Wi-Fi/MQTT passwords)
+secrets.h
+# Locally generated keys/certificates; never publish private keys
+*.key
+*.pem
+*.p12
+*.pfx
+.env
