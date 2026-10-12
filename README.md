@@ -25,10 +25,13 @@ advanced-IoT/
 ├── RaspberryPi_MQTT_SUBSCRIBER/
 │   ├── subscriber.py
 │   └── README.md
-└── ESP32_MQTT_RELIABILITY/
-    ├── ESP32_MQTT_RELIABILITY.ino
-    ├── secrets.h.example
-    ├── .gitignore
+├── ESP32_MQTT_RELIABILITY/
+│   ├── ESP32_MQTT_RELIABILITY.ino
+│   ├── secrets.h.example
+│   ├── .gitignore
+│   └── README.md
+└── ESP32_FreeRTOS_SENSOR_TASKS/
+    ├── ESP32_FreeRTOS_SENSOR_TASKS.ino
     └── README.md
 ```
 
@@ -152,6 +155,20 @@ hostname -I
 **کد، راه‌اندازی، آزمایش‌ها و رفع خطا:** [ESP32_MQTT_RELIABILITY](./ESP32_MQTT_RELIABILITY/README.md)
 
 **نتیجه مورد انتظار:** محصول هنگام قطع Broker پایش محلی را ادامه می‌دهد و در حد ظرفیت صف برای ارسال مجدد تلاش می‌کند. **این مثال تحویل تضمین‌شده یا ثبت دائمی همه داده‌ها نیست**؛ تله‌متری هنوز با QoS 0 و بدون TLS منتشر می‌شود. Remote Logging و FreeRTOS هم هنوز پیاده‌سازی نشده‌اند.
+
+## ۸. معماری Firmware و FreeRTOS — Slides 31–34
+
+**مسئله:** با زیادشدن مسئولیت‌های Firmware، می‌خواهیم خواندن سنسور و نمایش اطلاعات را در دو وظیفه جدا مدیریت کنیم و به‌شکل ایمن بین آن‌ها داده منتقل کنیم.
+
+1. ابتدا تفاوت معماری **Loop-Based** و برنامه زمان‌بندی‌شده یا **Event-Driven** را مرور کنید؛ FreeRTOS برای هر پروژه‌ای الزامی نیست.
+2. مثال مستقل [ESP32_FreeRTOS_SENSOR_TASKS](./ESP32_FreeRTOS_SENSOR_TASKS/README.md) را با اتصالات فعلی DHT22 و OLED اجرا کنید.
+3. مسیر **SensorTask → FreeRTOS Queue → DisplayTask** را روی OLED و Serial Monitor بررسی کنید.
+4. با فعال‌کردن `DEMO_SLOW_DISPLAY`، پرشدن Queue و سیاست حذف نمونه جدید را آزمایش کنید؛ سپس گزینه را غیرفعال کنید.
+5. نقش **Mutex** در Serial Logging و تفاوت آن با **Binary Semaphore** را توضیح دهید. خطای سنسور را نیز آزمایش کنید.
+
+**کد کامل، کتابخانه‌ها، اتصالات، آزمایش‌ها و رفع خطا:** [ESP32_FreeRTOS_SENSOR_TASKS](./ESP32_FreeRTOS_SENSOR_TASKS/README.md)
+
+**نتیجه مورد انتظار:** دو Task جدا برای سنسور و نمایشگر با یک Queue محدود و Mutex برای Logها کار می‌کنند. این مثال **MQTT یا Reliability قبلی را بازنویسی نمی‌کند** و برای یادگیری Task / Queue / Synchronization مستقل است؛ تست سخت‌افزاری نهایی لازم است.
 
 ## روال استفاده از مثال‌ها
 
