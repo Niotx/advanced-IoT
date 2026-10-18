@@ -34,10 +34,17 @@ advanced-IoT/
 ├── ESP32_FreeRTOS_SENSOR_TASKS/
 │   ├── ESP32_FreeRTOS_SENSOR_TASKS.ino
 │   └── README.md
-└── ESP32_MQTT_TLS/
-    ├── ESP32_MQTT_TLS.ino
-    ├── secrets.h.example
-    ├── .gitignore
+├── ESP32_MQTT_TLS/
+│   ├── ESP32_MQTT_TLS.ino
+│   ├── secrets.h.example
+│   ├── .gitignore
+│   └── README.md
+├── ESP32_OTA_UPDATE/
+│   ├── ESP32_OTA_UPDATE.ino
+│   ├── secrets.h.example
+│   ├── .gitignore
+│   └── README.md
+└── RaspberryPi_MAINTENANCE/
     └── README.md
 ```
 
@@ -192,6 +199,21 @@ hostname -I
 **کد و راهنمای ESP32:** [ESP32_MQTT_TLS](./ESP32_MQTT_TLS/README.md)
 
 **خروجی مورد انتظار:** ارتباط MQTT با TLS و اعتبارسنجی گواهی Broker برقرار می‌شود و حساب ESP32 فقط مجوز Publish روی Topicهای خود را دارد. **این نمونه Mutual TLS، ذخیره‌سازی آفلاین یا QoS تحویل تضمین‌شده ارائه نمی‌کند.** فایل‌های Credential واقعی و Private Keyها هیچ‌وقت بخشی از GitHub نیستند. اتصال روی سخت‌افزار واقعی نیازمند آزمون نهایی است.
+
+## ۱۰. OTA و نگهداری از راه دور — Slides 39–42
+
+**مسئله:** بعد از نصب ESP32 و Raspberry Pi در محیط واقعی، چگونه بدون اتصال مکرر USB، Firmware را به‌روزرسانی کنیم و سرویس‌های Raspberry Pi را قابل مدیریت نگه داریم؟
+
+1. با [ESP32_OTA_UPDATE](./ESP32_OTA_UPDATE/README.md)، پس از انتخاب Partition Scheme مناسب، نسخه `1.0.0` را **یک بار با USB** روی ESP32 نصب کنید.
+2. در شبکه محلی مورداعتماد، نسخه را به `1.1.0` تغییر دهید و از طریق `ArduinoOTA` آپلود کنید؛ روی OLED و Serial تغییر نسخه و ادامه خواندن DHT22 را بررسی کنید.
+3. تفاوت **دو OTA Partition** با **Rollback خودکار همراه با Health Check** را بررسی کنید. **این مثال ArduinoOTA، Signed OTA و Rollback تولیدی پیاده نمی‌کند.**
+4. با [RaspberryPi_MAINTENANCE](./RaspberryPi_MAINTENANCE/README.md) وضعیت Mosquitto، Logهای `journalctl`، منابع سیستم و بسته‌های قابل ارتقا با `apt` را بررسی کنید.
+5. انتقال فایل با `rsync --dry-run` و سپس `rsync` را تمرین کنید؛ کاربرد Ansible برای مدیریت چند Raspberry Pi را در مثال مفهومی README ببینید.
+
+**کد و دمو OTA:** [ESP32_OTA_UPDATE](./ESP32_OTA_UPDATE/README.md)  
+**راهنمای نگهداری Raspberry Pi:** [RaspberryPi_MAINTENANCE](./RaspberryPi_MAINTENANCE/README.md)
+
+**نتیجه مورد انتظار:** دانشجو بتواند **در LAN آزمایشگاهی** نسخه جدید Firmware را بدون USB روی ESP32 نصب و عملکرد سنسور را بعد از راه‌اندازی مجدد تأیید کند؛ و سرویس‌های Raspberry Pi را از طریق SSH بررسی کند. **این نمونه OTA برای اینترنت عمومی یا Production امن‌سازی نشده** و قابلیت‌های MQTT/TLS یا Buffering مثال‌های قبل را در خود ادغام نمی‌کند. اجرای واقعی روی سخت‌افزار هنوز نیاز به آزمون نهایی دارد.
 
 ## روال استفاده از مثال‌ها
 

@@ -1,0 +1,8 @@
+# Local credentials and machine-generated output
+secrets.h
+.env
+*.key
+*.pem
+*.p12
+*.bin
+build/
